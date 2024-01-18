@@ -1,10 +1,10 @@
 #### Preamble ####
-# Purpose: Simulates... [...UPDATE THIS...]
+# Purpose: Simulates the cleaned homicide data from 2004-2020 that I will be working with
 # Author: Alexander Guarasci
 # Date: 16 January 2023 
 # Contact: alexander.guarasci@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: [...UPDATE THIS...]
+# Pre-requisites: NA
 
 
 #### Workspace setup ####
