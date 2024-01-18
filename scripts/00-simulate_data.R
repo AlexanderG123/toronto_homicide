@@ -1,19 +1,35 @@
 #### Preamble ####
 # Purpose: Simulates... [...UPDATE THIS...]
-# Author: Rohan Alexander [...UPDATE THIS...]
-# Date: 11 February 2023 [...UPDATE THIS...]
-# Contact: rohan.alexander@utoronto.ca [...UPDATE THIS...]
+# Author: Alexander Guarasci
+# Date: 16 January 2023 
+# Contact: alexander.guarasci@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: [...UPDATE THIS...]
-# Any other information needed? [...UPDATE THIS...]
 
 
 #### Workspace setup ####
-library(tidyverse)
-# [...UPDATE THIS...]
+library(dplyr)
+library(lubridate)
 
-#### Simulate data ####
-# [...ADD CODE HERE...]
+# Create a sequence of dates from 2004-01-01 to 2020-12-31
+dates <- seq(from = ymd("2004-01-01"), to = ymd("2020-12-31"), by = "day")
+
+# Initialize an empty data frame
+simulated_data <- data.frame(occurrence_date= dates)
+# Simulate the event occurrence
+set.seed(123) # Setting a seed for reproducibility
+simulated_data <- simulated_data %>% 
+  mutate(EventOccurs = runif(n()) < 0.2, # 20% chance of event
+         neighbourhood = ifelse(EventOccurs, sample(1:158, size = n(), replace = TRUE), NA),
+         homicide_type = ifelse(EventOccurs, sample(c("shooting", "stabbing", "other"), size = n(), replace = TRUE), NA),
+         day_of_week = ifelse(EventOccurs, format(occurrence_date, "%a"), NA), # Add abbreviated day of the week using format()
+         occurrence_year = ifelse(EventOccurs, year(occurrence_date), NA) # Add occurrence_year
+  ) %>%
+  filter(EventOccurs) # Keep only the rows where the event occurs
+
+# View the data
+simulated_data <- simulated_data|> select(occurrence_date, neighbourhood, homicide_type, day_of_week, occurrence_year)
+write_csv(x = simulated_data, file = "inputs/data/simulated_data.csv")
 
 
 
