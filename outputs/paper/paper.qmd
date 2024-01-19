@@ -14,11 +14,6 @@ abstract: |
 ---
 ```{r}
 knitr::opts_chunk$set(echo = FALSE, results = "hide", message = FALSE, warning = FALSE)
-```
-
-
-
-```{r}
 library("janitor")
 library("tidyverse")
 library("knitr")
