@@ -1,10 +1,10 @@
-# Starter folder
+# toronto_homicide
 
 ## Overview
 
-This repo provides students with a foundation for their own projects associated with *Telling Stories with Data*. You do not need every aspect for every paper and you should delete aspects that you do not need.
+This repo documents the steps and proccesses used in creating the paper "Exploring Homicide Trends in Toronto: A Seventeen-Year Statistical Overview (2004-2020)". 
 
-To use this folder, click the green "Code" button", then "Download ZIP". Move the downloaded folder to where you want to work on your own computer, and then modify it to suit.
+Use this folder to reproduce the results on your own.
 
 ## File Structure
 

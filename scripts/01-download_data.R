@@ -1,7 +1,7 @@
 #### Preamble ####
 # Purpose: Downloads and saves the data from OpenDataToronto
 # Author: Alexander Guarasci
-# Date: 16 January 2023 
+# Date: 18 January 2023 
 # Contact: alexander.guarasci@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: NA

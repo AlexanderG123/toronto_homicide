@@ -1,221 +1,177 @@
 ---
-title: "My title"
-subtitle: "My subtitle if needed"
-author: 
-  - First author
-  - Another author
-thanks: "Code and data are available at: LINK."
-date: today
+title: "Exploring Homicide Trends in Toronto: A Seventeen-Year Statistical Overview (2004-2020)"
+author: "Alexander Guarasci"
+date: "`r format(Sys.Date(), '%B %d, %Y')`" # This will add the current date
 date-format: long
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
-format: pdf
-number-sections: true
 bibliography: references.bib
+execute:
+  echo: false
+format: pdf
+fig-pos: "H"
+abstract: |
+ This study investigates homicide trends in Toronto from 2004 to 2020, utilizing data from OpenDataToronto. The data shows a fluctuating increase in homicide rates over the city, with most homicides occurring in a relatively small subset of neighbourhoods. Additionally, the data shows the prevalence of gun violence, a surprising result in a country known for its strict gun control laws. This research is significant as it provides insights into urban violence in a major Canadian city. It contributes to the understanding of urban crime dynamics in the Greater Toronto Area.
+
 ---
+```{r}
+knitr::opts_chunk$set(echo = FALSE, results = "hide", message = FALSE, warning = FALSE)
+```
+
+
 
 ```{r}
-#| include: false
-#| warning: false
-#| message: false
-
-library(tidyverse)
-library(palmerpenguins)
+library("janitor")
+library("tidyverse")
+library("knitr")
 ```
 
 
 # Introduction
 
-You can and should cross-reference sections and sub-sections. 
+Urban violence and its impact on communities is a pressing concern in cities worldwide, and Toronto, Canada's most populous and diverse city, is no exception. The study of homicide trends within this urban setting is not only critical for ensuring public safety but also for understanding the underlying social and economic factors that drive such violence. This paper presents an analysis of the patterns and distribution of homicides in the Greater Toronto Area (GTA) from 2004 to 2020. The research is driven by a need to comprehensively understand the dynamics of these incidents, their geographic spread across the city, the predominant methods of homicide, and the broader implications for urban policy and community wellbeing.
 
-The remainder of this paper is structured as follows. @sec-data....
+In addressing this need, the study utilizes a robust dataset from OpenDataToronto, specifically the “Police Annual Statistical Report - Homicides,” published by the Toronto Police Services. This dataset provides a detailed account of all recorded homicides under the jurisdiction of the Toronto Police Services over a seventeen-year period. Our research offers a meticulous examination of both the spatial distribution of homicides across Toronto's neighbourhoods and the methods used in these violent acts. The analysis, conducted through the R programming language and supplemented with various analytical tools like Tidyverse, Janitor, and Knitr, delves deep into the trends, revealing patterns that could have implications for policy formulation and implementation.
+
+The findings of this research are revealing. We observed a marginal yet noteworthy increase in overall homicide rates over the study period, a trend that calls for a critical evaluation of current approaches to managing urban violence. More strikingly, the analysis unveiled a disproportionate concentration of homicides in specific neighborhoods, suggesting a need for targeted intervention strategies. Furthermore, the predominance of shootings as the homicide method challenges existing perceptions about firearm accessibility and regulation in Canada, thus calling for a reevaluation of national gun control policies. These findings not only inform effective policy and law enforcement strategies but also contribute to the broader discourse on urban violence in multicultural settings.
+
+The structure of the paper is as follows: Section 2 details the data sources, variables of interest, and the data processing techniques employed in the study. Section 2.2 is devoted to presenting and discussing the key findings, including yearly homicide trends, the geographical distribution of these incidents, and the analysis of the prevalent methods of homicide. The concluding section synthesizes these insights, drawing out their implications for urban policy, community safety strategies, and the broader societal understanding of urban violence in Toronto. This study not only sheds light on the current state of urban homicides in Toronto but also sets the stage for future research and policy development in this critical area.
 
 
 
-# Data {#sec-data}
 
-Some of our data is of penguins (@fig-bills), from @palmerpenguins.
+# Data
 
-```{r}
-#| label: fig-bills
-#| fig-cap: Bills of penguins
-#| echo: false
+The data used in this paper was gathered from OpenDataToronto [@opendatatoronto], a city-funded source with the explicit goal of making the city of Toronto more “transparent, accountable, participatory and accessible” [@Open]. The dataset used in this analysis was called “Police Annual Statistical Report - Homicides”, and was published by Toronto Police Services. In order to perform the analysis, the programming language for data analysis, visualization and statistical investigation R was used [@R], along with the R packages Tidyverse [@tidyverse], Janitor [@janitor] and Knitr [@knitr].
 
-ggplot(penguins, aes(x = island, fill = species)) +
-  geom_bar(alpha = 0.8) +
-  scale_fill_manual(values = c("darkorange","purple","cyan4"),
-                    guide = "none") +
-  theme_minimal() +
-  facet_wrap(~species, ncol = 1) +
-  coord_flip()
+
+# The Dataset:
+
+The dataset utilized in this paper is the aforementioned “Police Annual Statistical Report - Homicides”, which includes data from every homicide under the Toronto Police Services jurisdiction between 2004 and 2020. The data set itself contains 1166 samples each with 10 variables. Because Toronto Police Services is the only institution qualified to deal with homicides, no other datasets were considered. One potentially significant concern with this data ,is the possibility that it is incomplete due to undetected homicides. However, I do not believe that there are sufficient undetected homicides to greatly impact the ensuing analysis. Another problem with the data lies in how it handles the location. The Toronto Police Services have deliberately made the location of each occurrence at the nearest intersection, and therefore the data is not flawless by the admission of the data procurers. Finally, the relatively small number of homicides per year in Toronto renders the data somewhat difficult to analyze. When trying to examine trends within certain communities and regions, the deviation was too high to extrapolate anything of interest.
+
+Making the data manageable was simply a matter of removing the useless variables (I am sure the police department would argue that homicide_id is relevant for their work but it is useless for the purposes of our analysis) and summarizing certain elements (ie. explicitly stating the year each homicide happened in order to perform analysis on a year by year basis). 
+
+# Variables of Interest:
+
+The data includes the date of the event, the type of homicide, as well as the neighbourhood in which the homicide took place. The date is unambiguous and needs no further explanation. The type of homicide is broken into three clear sub-categories which are “shooting”, “stabbing” and “other”. For neighbourhood, Toronto is broken up into 158 “social planning neighbourhoods” [@neighbourhoods]. These are each numbered and reported independently for the purposes of this paper, (this is also how StatsCan breaks Toronto into neighbourhoods for all of their relevant data sets). 
+
+With regard to measurement the precision of the location is inaccurate, but the important aspects of the data set are unambiguous in terms of their ability to be measured. A homicide is a countable event that does not need to be measured, the categorization of homicide is the same.  Only the date may have measurement errors but these would be unimpactful for the following analysis.  
+
+
+# Yearly Homicide Trends
+Our analysis delves into the details of homicide trends in the Greater Toronto Area (GTA) from 2004 to 2020, revealing insights about the nature and distribution of these violent incidents.
+
+
+
+```{r uniquename, fig.cap = "Toronto homicides per year 2004 - 2020", echo = FALSE}
+library("tidyverse")
+data <- read_csv("/Users/alexanderguarasci/toronto_homicide/outputs/data/edited_data.csv")
+homicides_by_year <- data |>
+  group_by(occurrence_year) |>
+  summarise(Homicides = n())
+homicides_by_year |>
+ ggplot(aes(x = occurrence_year, y = Homicides)) +  
+  geom_bar(stat = "identity") + 
+  geom_smooth(method = "lm", aes(group = 1), color = "blue") +
+  theme_minimal() + # Make the theme neater
+  labs(x = "Year", y = "Number of Homicides")
 ```
 
-Talk more about it.
+Looking at the yearly trends in homicides in Toronto, Figure 1, which combines a bar chart with a linear regression line, shows a discernible increase in homicides over the 17 years. Despite some volatility in yearly figures, a worrying upward trend is apparent in the positively-sloped linear regression line. To quantify this rise, the average number of homicides in the first half of the period was 67 per year, which increased to 69 in the second half. This nearly 3% rise in homicides, although seemingly small, is significant given its societal implications. However, it's important to note that these figures do not account for other factors like population growth.
 
-And also planes (@fig-planes). (You can change the height and width, but don't worry about doing that until you have finished every other aspect of the paper - Quarto will try to make it look nice and the defaults usually work well once you have enough text.)
 
-```{r}
-#| label: fig-planes
-#| fig-cap: Relationship between wing length and width
-#| echo: false
-#| warning: false
-#| message: false
+# Geographical Distribution of Homicides
 
-analysis_data <- read_csv(here::here("outputs/data/analysis_data.csv"))
+```{r uniquename1, fig.cap = "Toronto distribution of homicides per neighbourhood 2004 - 2020", echo = FALSE}
+data <- read_csv("/Users/alexanderguarasci/toronto_homicide/outputs/data/edited_data.csv")
+homicides_by_hood <- data |> count(neighbourhood)
+homicides_by_hood <- homicides_by_hood |> arrange(desc(n))
+homicides_by_hood
+homicides_by_hood|>
+  ggplot(aes(x = neighbourhood, y = n)) + # aes abbreviates "aesthetics" 
+  geom_bar(stat = "identity") + 
+  theme_minimal() +# Make the theme neater
+  theme(axis.text.x = element_blank()) + # remove the neighbourhood labels so the graph is legible
+  labs(x = "Neighbourhood", y = "Number of Homicides")
 
-analysis_data |> 
-  ggplot(aes(x = width, y = length)) +
-  geom_point(alpha = 0.8) +
-  theme_minimal() +
-  labs(x = "Wing width (mm)",
-       y = "Wing length (mm)")
 ```
 
-Talk way more about it. 
+Our analysis further explores the uneven distribution of homicides across Toronto's neighbourhoods. As illustrated in Figure 2, there were 1166 homicides recorded between 2004 and 2020, with a pronounced concentration in certain areas. For example, just 24 out of 158 neighbourhoods, which is merely 15.2% of the total, witnessed 15 or more homicides, accounting for 45.6% of the overall figure. Additionally, 14 neighbourhoods experienced over 20 homicides, making up 31.1% of the aggregate, while a mere 9 neighbourhoods, each with more than 25 homicides, constituted 21.4% of the total. This lopsided distribution highlights a pattern where most neighborhoods encounter few or no homicides, while a select few bear a disproportionate share. Such insights are crucial for devising policing strategies and allocating resources. They underscore the potential effectiveness of a targeted approach but also bring to light the challenges of potential over-policing and its effects on communities already burdened by high crime rates. Consideration of alternatives, such as increased educational and social support spending, may offer pathways to reduce homicide rates in these neighbourhoods. A deeper analysis with a more comprehensive data set is essential to inform any policy decisions.
 
+# Predominance of Shooting as a Homicide Method
 
+Perhaps the most striking finding of our study is the predominance of shooting homicides.
 
-# Model
+```{r uniquename2, fig.cap = "Toronto types of homicides breakdown 2004 - 2020", echo = FALSE}
+data <- read_csv("/Users/alexanderguarasci/toronto_homicide/outputs/data/edited_data.csv")
 
-The goal of our modelling strategy is twofold. Firstly,...
-
-Here we briefly describe the Bayesian analysis model used to investigate... Background details and diagnostics are included in [Appendix -@sec-model-details].
-
-## Model set-up
-
-Define $y_i$ as the number of seconds that the plane remained aloft. Then $\beta_i$ is the wing width and $\gamma_i$ is the wing length, both measured in millimeters.  
-
-\begin{align} 
-y_i|\mu_i, \sigma &\sim \mbox{Normal}(\mu_i, \sigma) \\
-\mu_i &= \alpha + \beta_i + \gamma_i\\
-\alpha &\sim \mbox{Normal}(0, 2.5) \\
-\beta &\sim \mbox{Normal}(0, 2.5) \\
-\gamma &\sim \mbox{Normal}(0, 2.5) \\
-\sigma &\sim \mbox{Exponential}(1)
-\end{align}
-
-We run the model in R [@citeR] using the `rstanarm` package of @rstanarm. We use the default priors from `rstanarm`.
-
-
-### Model justification
-
-We expect a positive relationship between the size of the wings and time spent aloft. In particular...
-
-We can use maths by including latex between dollar signs, for instance $\theta$.
-
-
-# Results
-
-Our results are summarized in @tbl-modelresults.
-
-```{r}
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-library(rstanarm)
-
-first_model <-
-  readRDS(file = here::here("outputs/models/first_model.rds"))
+homicide_type <- data |> count(homicide_type)
+homicide_type|>
+  ggplot(aes(x = homicide_type, y = n)) +  
+  geom_bar(stat = "identity") + 
+  theme_minimal() + # Make the theme neater
+  labs(x = "Type of Homicide", y = "Number of Homicides")
 ```
 
-```{r}
-#| echo: false
-#| eval: true
-#| label: tbl-modelresults
-#| tbl-cap: "Explanatory models of flight time based on wing width and wing length"
-#| warning: false
+The graph offers a revealing glimpse into the distribution of homicides over the span of 17 years, clearly demonstrating that shootings were substantially more prevalent than stabbings. However, the data becomes even more informative when dissected on an annual basis.
 
-modelsummary::modelsummary(
-  list(
-    "First model" = first_model
-  ),
-  statistic = "mad",
-  fmt = 2
-)
+```{r uniquename3, fig.cap = "Types of homicides per year", echo = FALSE}
+data <- read_csv("/Users/alexanderguarasci/toronto_homicide/outputs/data/edited_data.csv")
+
+# Summarize and arrange the data
+homicide_types_per_year <- data |>
+  group_by(occurrence_year, homicide_type) |>
+  summarise(Count = n(), .groups = 'drop') |>
+  arrange(occurrence_year, homicide_type)
+homicide_types_per_year
+
+# Plot the data
+ggplot(homicide_types_per_year, aes(x = occurrence_year, y = Count, color = homicide_type)) +
+  geom_point() +
+  theme_minimal() + # Make the theme neater
+  labs(x = "Occurrence Year", y = "Number of Homicides", color = "Homicide Type")
+
 ```
 
+Examining Figure 4 which depicts homicide trends over the 17-year study period reveals a consistent pattern: shootings were the most common type of homicide every year. There was not a single year when shootings were outnumbered by stabbings or other forms of homicide. This observation raises critical questions about Canada's gun control laws. It challenges the widely held perception of limited access to guns among Canadians, prompting a deeper exploration of whether this is a true representation of the situation or if it is more a reflection of population size or other variables. The data suggests a reevaluation of current policies and societal attitudes toward gun ownership and accessibility in Canada. 
 
 
+```{r uniquename4, fig.cap = "Toronto shooting percentage of total homicides by year 2004 - 2020", echo = FALSE}
+data <- read_csv("/Users/alexanderguarasci/toronto_homicide/outputs/data/edited_data.csv")
 
-# Discussion
+homicide_types_per_year <- data %>%
+  group_by(occurrence_year, homicide_type) %>%
+  summarise(Count = n(), .groups = 'drop') %>%
+  arrange(occurrence_year, homicide_type)
 
-## First discussion point {#sec-first-point}
+total_homicides_per_year <- data %>%
+  group_by(occurrence_year) %>%
+  summarise(Total = n(), .groups = 'drop')
 
-If my paper were 10 pages, then should be be at least 2.5 pages. The discussion is a chance to show off what you know and what you learnt from all this. 
+homicide_types_per_year <- homicide_types_per_year %>%
+  left_join(total_homicides_per_year, by = "occurrence_year") %>%
+  mutate(Percentage = (Count / Total) * 100)
 
-## Second discussion point
+shooting_data <- homicide_types_per_year %>%
+  filter(homicide_type == "Shooting")
 
-## Third discussion point
+ggplot(shooting_data, aes(x = occurrence_year, y = Percentage)) +
+  geom_point(color = "green") +
+  geom_smooth(method = "lm", color = "blue") +
+  labs(title = "Trend in Percentage of Shooting Homicides Over Time",
+       x = "Year",
+       y = "Percentage of Homicides (%)") +
+  theme_minimal()
 
-## Weaknesses and next steps
-
-Weaknesses and next steps should also be included.
-
-\newpage
-
-\appendix
-
-# Appendix {-}
-
-
-# Additional data details
-
-# Model details {#sec-model-details}
-
-## Posterior predictive check
-
-In @fig-ppcheckandposteriorvsprior-1 we implement a posterior predictive check. This shows...
-
-In @fig-ppcheckandposteriorvsprior-2 we compare the posterior with the prior. This shows... 
-
-```{r}
-#| eval: true
-#| echo: false
-#| message: false
-#| warning: false
-#| label: fig-ppcheckandposteriorvsprior
-#| layout-ncol: 2
-#| fig-cap: "Examining how the model fits, and is affected by, the data"
-#| fig-subcap: ["Posterior prediction check", "Comparing the posterior with the prior"]
-
-pp_check(first_model) +
-  theme_classic() +
-  theme(legend.position = "bottom")
-
-posterior_vs_prior(first_model) +
-  theme_minimal() +
-  scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom") +
-  coord_flip()
 ```
+Additionally, an analysis of Figure 5 reveals a concerning upward trend in the total percentage of homicides by gunshot. This escalation not only accentuates the growing problem of gun violence in Toronto but also signals a potential shift in the nature of criminal activity and societal issues. The increasing reliance on firearms as a means for committing homicide points towards a deeper issue, possibly linked to the accessibility of firearms, changes in criminal behaviour, or broader socio-economic factors. The rising trend underscores the urgency for a thorough examination of gun control measures, policing strategies, and community interventions aimed at addressing the root causes of this surge in gun-related violence. It also invites a broader discussion about the societal factors contributing to this alarming trend, calling for a multi-faceted approach to tackling the complexities of gun violence in modern urban settings.
 
-## Diagnostics
+# Conclusion
 
-@fig-stanareyouokay-1 is a trace plot. It shows... This suggests...
+Our in-depth analysis of Toronto's homicide trends from 2004 to 2020 reveals critical insights into the nature and distribution of urban violence in Canada's largest city. The data unearthed in this study paints a complex picture, indicating a marginal but noticeable increase in overall homicide rates over the years. This uptick, while seemingly slight, necessitates a reevaluation of existing strategies to combat urban violence. The study highlights the importance of contextual factors, such as population growth and urbanization, in understanding these trends. Moreover, the disproportionately high concentration of homicides in a small number of neighbourhoods demands a targeted approach. This pattern underscores the need for strategic resource allocation and policy planning, aiming to address the unique challenges in these high-risk areas. Balancing enhanced policing with increased investment in social and educational programs could mitigate the root causes of violence, avoiding the pitfalls of over-policing and its potential negative impact on community relations.
 
-@fig-stanareyouokay-2 is a Rhat plot. It shows... This suggests...
-
-```{r}
-#| echo: false
-#| eval: true
-#| message: false
-#| warning: false
-#| label: fig-stanareyouokay
-#| fig-cap: "Checking the convergence of the MCMC algorithm"
-#| fig-subcap: ["Trace plot", "Rhat plot"]
-#| layout-ncol: 2
-
-plot(first_model, "trace")
-
-plot(first_model, "rhat")
-```
+Equally significant is the predominance of shooting as the method of homicide, consistently observed throughout the study period. This trend challenges the existing perceptions about gun accessibility and usage in Canada, calling for a critical review of the nation's gun control policies. The increasing reliance on firearms in homicides suggests a shift in criminal behaviour and possibly points to broader socio-economic issues. In conclusion, the complexities uncovered in our study advocate for a multifaceted approach to addressing urban violence. Effective law enforcement combined with proactive social policies is crucial, not only for immediate crime reduction but also for addressing the underlying socio-economic factors that contribute to such environments. As Toronto continues to evolve as a multicultural urban setting, it is imperative that future policies and interventions are informed by comprehensive data analysis and a deep understanding of the city's unique social dynamics.
 
 
-
-\newpage
-
+Code and data supporting this analysis is available at:\
+https://github.com/AlexanderG123/toronto_homicide
 
 # References
-
-
