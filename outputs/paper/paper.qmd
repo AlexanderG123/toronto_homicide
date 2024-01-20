@@ -58,7 +58,8 @@ Our analysis delves into the details of homicide trends in the Greater Toronto A
 
 # 3.1 Yearly Homicide Trends
 
-```{r uniquename, fig.cap = "Toronto homicides per year 2004 - 2020", echo = FALSE}
+```{r graph1, fig.cap = "Toronto homicides per year 2004 - 2020", echo = FALSE}
+#| label: fig-1
 library("tidyverse")
 data <- read_csv("/Users/alexanderguarasci/toronto_homicide/outputs/data/edited_data.csv")
 homicides_by_year <- data |>
@@ -72,12 +73,13 @@ homicides_by_year |>
   labs(x = "Year", y = "Number of Homicides")
 ```
 
-Looking at the yearly trends in homicides in Toronto, Figure 1, which combines a bar chart with a linear regression line, shows a discernible increase in homicides over the 17 years. Despite some volatility in yearly figures, a worrying upward trend is apparent in the positively-sloped linear regression line. To quantify this rise, the average number of homicides in the first half of the period was 67 per year, which increased to 69 in the second half. This nearly 3% rise in homicides, although seemingly small, is significant given its societal implications. However, it's important to note that these figures do not account for other factors like population growth.
+Looking at the yearly trends in homicides in Toronto, @fig-1, which combines a bar chart with a linear regression line, shows a discernible increase in homicides over the 17 years. Despite some volatility in yearly figures, a worrying upward trend is apparent in the positively-sloped linear regression line. To quantify this rise, the average number of homicides in the first half of the period was 67 per year, which increased to 69 in the second half. This nearly 3% rise in homicides, although seemingly small, is significant given its societal implications. However, it's important to note that these figures do not account for other factors like population growth.
 
 
 # 3.2 Geographical Distribution of Homicides
 
-```{r uniquename1, fig.cap = "Toronto distribution of homicides per neighbourhood 2004 - 2020", echo = FALSE}
+```{r 2, fig.cap = "Toronto distribution of homicides per neighbourhood 2004 - 2020", echo = FALSE}
+#| label: fig-2
 data <- read_csv("/Users/alexanderguarasci/toronto_homicide/outputs/data/edited_data.csv")
 homicides_by_hood <- data |> count(neighbourhood)
 homicides_by_hood <- homicides_by_hood |> arrange(desc(n))
@@ -91,13 +93,14 @@ homicides_by_hood|>
 
 ```
 
-Our analysis further explores the uneven distribution of homicides across Toronto's neighbourhoods. As illustrated in Figure 2, there were 1166 homicides recorded between 2004 and 2020, with a pronounced concentration in certain areas. For example, just 24 out of 158 neighbourhoods, which is merely 15.2% of the total, witnessed 15 or more homicides, accounting for 45.6% of the overall figure. Additionally, 14 neighbourhoods experienced over 20 homicides, making up 31.1% of the aggregate, while a mere 9 neighbourhoods, each with more than 25 homicides, constituted 21.4% of the total. This lopsided distribution highlights a pattern where most neighborhoods encounter few or no homicides, while a select few bear a disproportionate share. Such insights are crucial for devising policing strategies and allocating resources. They underscore the potential effectiveness of a targeted approach but also bring to light the challenges of potential over-policing and its effects on communities already burdened by high crime rates. Consideration of alternatives, such as increased educational and social support spending, may offer pathways to reduce homicide rates in these neighbourhoods. A deeper analysis with a more comprehensive data set is essential to inform any policy decisions.
+Our analysis further explores the uneven distribution of homicides across Toronto's neighbourhoods. As illustrated in @fig-2, there were 1166 homicides recorded between 2004 and 2020, with a pronounced concentration in certain areas. For example, just 24 out of 158 neighbourhoods, which is merely 15.2% of the total, witnessed 15 or more homicides, accounting for 45.6% of the overall figure. Additionally, 14 neighbourhoods experienced over 20 homicides, making up 31.1% of the aggregate, while a mere 9 neighbourhoods, each with more than 25 homicides, constituted 21.4% of the total. This lopsided distribution highlights a pattern where most neighborhoods encounter few or no homicides, while a select few bear a disproportionate share. Such insights are crucial for devising policing strategies and allocating resources. They underscore the potential effectiveness of a targeted approach but also bring to light the challenges of potential over-policing and its effects on communities already burdened by high crime rates. Consideration of alternatives, such as increased educational and social support spending, may offer pathways to reduce homicide rates in these neighbourhoods. A deeper analysis with a more comprehensive data set is essential to inform any policy decisions.
 
 # 3.3 Predominance of Shooting as a Homicide Method
 
 Perhaps the most striking finding of our study is the predominance of shooting homicides.
 
 ```{r uniquename2, fig.cap = "Toronto types of homicides breakdown 2004 - 2020", echo = FALSE}
+#| label: fig-3
 data <- read_csv("/Users/alexanderguarasci/toronto_homicide/outputs/data/edited_data.csv")
 
 homicide_type <- data |> count(homicide_type)
@@ -108,9 +111,10 @@ homicide_type|>
   labs(x = "Type of Homicide", y = "Number of Homicides")
 ```
 
-The graph offers a revealing glimpse into the distribution of homicides over the span of 17 years, clearly demonstrating that shootings were substantially more prevalent than stabbings. However, the data becomes even more informative when dissected on an annual basis.
+@fig-3 offers a revealing glimpse into the distribution of homicides over the span of 17 years, clearly demonstrating that shootings were substantially more prevalent than stabbings. However, the data becomes even more informative when dissected on an annual basis.
 
 ```{r uniquename3, fig.cap = "Types of homicides per year", echo = FALSE}
+#| label: fig-4
 data <- read_csv("/Users/alexanderguarasci/toronto_homicide/outputs/data/edited_data.csv")
 
 # Summarize and arrange the data
@@ -128,10 +132,11 @@ ggplot(homicide_types_per_year, aes(x = occurrence_year, y = Count, color = homi
 
 ```
 
-Examining Figure 4 which depicts homicide trends over the 17-year study period reveals a consistent pattern: shootings were the most common type of homicide every year. There was not a single year when shootings were outnumbered by stabbings or other forms of homicide. This observation raises critical questions about Canada's gun control laws. It challenges the widely held perception of limited access to guns among Canadians, prompting a deeper exploration of whether this is a true representation of the situation or if it is more a reflection of population size or other variables. The data suggests a reevaluation of current policies and societal attitudes toward gun ownership and accessibility in Canada. 
+Examining @fig-4, which depicts homicide trends over the 17-year study period reveals a consistent pattern: shootings were the most common type of homicide every year. There was not a single year when shootings were outnumbered by stabbings or other forms of homicide. This observation raises critical questions about Canada's gun control laws. It challenges the widely held perception of limited access to guns among Canadians, prompting a deeper exploration of whether this is a true representation of the situation or if it is more a reflection of population size or other variables. The data suggests a reevaluation of current policies and societal attitudes toward gun ownership and accessibility in Canada. 
 
 
 ```{r uniquename4, fig.cap = "Toronto shooting percentage of total homicides by year 2004 - 2020", echo = FALSE}
+#| label: fig-5
 data <- read_csv("/Users/alexanderguarasci/toronto_homicide/outputs/data/edited_data.csv")
 
 homicide_types_per_year <- data %>%
@@ -159,7 +164,7 @@ ggplot(shooting_data, aes(x = occurrence_year, y = Percentage)) +
   theme_minimal()
 
 ```
-Additionally, an analysis of Figure 5 reveals a concerning upward trend in the total percentage of homicides by gunshot. This escalation not only accentuates the growing problem of gun violence in Toronto but also signals a potential shift in the nature of criminal activity and societal issues. The increasing reliance on firearms as a means for committing homicide points towards a deeper issue, possibly linked to the accessibility of firearms, changes in criminal behaviour, or broader socio-economic factors. The rising trend underscores the urgency for a thorough examination of gun control measures, policing strategies, and community interventions aimed at addressing the root causes of this surge in gun-related violence. It also invites a broader discussion about the societal factors contributing to this alarming trend, calling for a multi-faceted approach to tackling the complexities of gun violence in modern urban settings.
+Additionally, an analysis of @fig-5 reveals a concerning upward trend in the total percentage of homicides by gunshot. This escalation not only accentuates the growing problem of gun violence in Toronto but also signals a potential shift in the nature of criminal activity and societal issues. The increasing reliance on firearms as a means for committing homicide points towards a deeper issue, possibly linked to the accessibility of firearms, changes in criminal behaviour, or broader socio-economic factors. The rising trend underscores the urgency for a thorough examination of gun control measures, policing strategies, and community interventions aimed at addressing the root causes of this surge in gun-related violence. It also invites a broader discussion about the societal factors contributing to this alarming trend, calling for a multi-faceted approach to tackling the complexities of gun violence in modern urban settings.
 
 # Section 4: Conclusion
 
