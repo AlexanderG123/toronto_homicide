@@ -117,14 +117,12 @@ homicide_type|>
 #| label: fig-4
 data <- read_csv("/Users/alexanderguarasci/toronto_homicide/outputs/data/edited_data.csv")
 
-# Summarize and arrange the data
 homicide_types_per_year <- data |>
   group_by(occurrence_year, homicide_type) |>
   summarise(Count = n(), .groups = 'drop') |>
   arrange(occurrence_year, homicide_type)
 homicide_types_per_year
 
-# Plot the data
 ggplot(homicide_types_per_year, aes(x = occurrence_year, y = Count, color = homicide_type)) +
   geom_point() +
   theme_minimal() + # Make the theme neater
