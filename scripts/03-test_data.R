@@ -2,7 +2,7 @@
 #### Preamble ####
 # Purpose: Tests if the simulated data is within the required bounds
 # Author: Alexander Guarasci
-# Date: 18 January 2023 
+# Date: 23 January 2023 
 # Contact: alexander.guarasci@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: run 00-simulate_data.R
@@ -20,5 +20,4 @@ all(data$homicide_type %in% c("shooting", "other", "stabbing"))
 
 #Test3, checks neighbourhoods are appropriately numbered (only works on simulated data)
 all(data$neighbourhood >= 1 & data$neighbourhood <= 158)
-
 

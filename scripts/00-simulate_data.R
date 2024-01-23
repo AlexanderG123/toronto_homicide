@@ -1,7 +1,7 @@
 #### Preamble ####
 # Purpose: Simulates the cleaned homicide data from 2004-2020 that I will be working with
 # Author: Alexander Guarasci
-# Date: 18 January 2023 
+# Date: 23 January 2023 
 # Contact: alexander.guarasci@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: NA
@@ -29,6 +29,5 @@ simulated_data <- simulated_data %>%
 # View the data
 simulated_data <- simulated_data|> select(occurrence_date, neighbourhood, homicide_type, day_of_week, occurrence_year)
 write_csv(x = simulated_data, file = "outputs/data/simulated_data.csv")
-
 
 

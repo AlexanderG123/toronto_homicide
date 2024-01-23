@@ -1,7 +1,7 @@
 #### Preamble ####
 # Purpose: Downloads and saves the data from OpenDataToronto
 # Author: Alexander Guarasci
-# Date: 18 January 2023 
+# Date: 23 January 2023 
 # Contact: alexander.guarasci@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: NA
@@ -28,6 +28,8 @@ datastore_resources <- filter(resources, tolower(format) %in% c('csv', 'geojson'
 # load the first datastore resource as a sample
 data <- filter(datastore_resources, row_number()==1) %>% get_resource()
 write_csv(x = data , file = "inputs/data/unedited_data.csv")
+
+
 
 
 
