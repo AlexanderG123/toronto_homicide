@@ -1,5 +1,7 @@
 # Exploring Homicide Trends in Toronto: A Seventeen-Year Statistical Overview (2004-2020)
 
+## Overview of the Project
+
 This repo documents the steps and processes used in creating the paper "Exploring Homicide Trends in Toronto: A Seventeen-Year Statistical Overview (2004-2020)". 
 
 Use this folder to reproduce the results on your own.
