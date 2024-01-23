@@ -2,9 +2,12 @@
 
 ## Overview
 
-This repo documents the steps and proccesses used in creating the paper "Exploring Homicide Trends in Toronto: A Seventeen-Year Statistical Overview (2004-2020)". 
+This repo documents the steps and processes used in creating the paper "Exploring Homicide Trends in Toronto: A Seventeen-Year Statistical Overview (2004-2020)". 
 
 Use this folder to reproduce the results on your own.
+
+Note on LLM usage: 
+LLMs were used sparingly, GPT 3.5 was somewhat helpful with simulating my dataset but I found it more frustrating than it was worth because it spat out code that I didn't understand that I needed to edit to get what I actually wanted.  
 
 ## File Structure
 
