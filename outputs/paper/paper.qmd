@@ -73,7 +73,10 @@ homicides_by_year |>
   labs(x = "Year", y = "Number of Homicides")
 ```
 
-Looking at the yearly trends in homicides in Toronto, @fig-1, which combines a bar chart with a linear regression line, shows a discernible increase in homicides over the 17 years. Despite some volatility in yearly figures, a worrying upward trend is apparent in the positively-sloped linear regression line. To quantify this rise, the average number of homicides in the first half of the period was 67 per year, which increased to 69 in the second half. This nearly 3% rise in homicides, although seemingly small, is significant given its societal implications. However, it's important to note that these figures do not account for other factors like population growth.
+Looking at the yearly trends in homicides in Toronto, @fig-1, which combines a bar chart with a linear regression line[^2], shows a discernible increase in homicides over the 17 years. Despite some volatility in yearly figures, a worrying upward trend is apparent in the positively-sloped linear regression line. To quantify this rise, the average number of homicides in the first half of the period was 67 per year, which increased to 69 in the second half. This nearly 3% rise in homicides, although seemingly small, is significant given its societal implications. However, it's important to note that these figures do not account for other factors like population growth.
+
+
+[^2]: A linear regression is a statistical model that attempts to show a linear relationship between two variables, and thusly be able to predict how a change in one of the variables will impact a change in the other. In this case it is showing that over the course of the study, homicides are increasing
 
 
 # 3.2 Geographical Distribution of Homicides
@@ -173,6 +176,11 @@ Equally significant is the predominance of shooting as the method of homicide, c
 
 
 
+# Appendix
+
+## Data Cleaning
+As mentioned briefly in 2.1, the cleaning of the data set was straight forward. I started by using the wday function [@tidyverse] to create a column in the data set that has the day of the week each event occurred, this was not ultimately helpful in my final analysis but it was interesting see the breakdown of homicide by weekday in my data exploration. After this, I used the select function [@tidyverse] to remove all unnecessary columns so that only the interesting variables would be in my cleaned data set.  I proceeded to use clean_names function [@janitor] to make the column names more appropriate, and finally I used as.Date [@R] to get rid of the time stamps shown in the date column.  
 
 
 # References
+
